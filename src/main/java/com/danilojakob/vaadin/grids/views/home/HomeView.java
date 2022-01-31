@@ -6,8 +6,12 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.provider.hierarchy.TreeData;
+import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
@@ -18,22 +22,26 @@ import java.util.List;
 @PageTitle("Home")
 @Route(value = "home", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
-public class HomeView extends HorizontalLayout {
+public class HomeView extends VerticalLayout {
 
     private TextField name;
     private Button addEntry;
     private Grid<Person> defaultGrid;
     private ListDataProvider<Person> dataProvider;
+    private TreeGrid<Person> personTreeGrid;
+    private TreeDataProvider<Person> treeDataProvider;
+    private Person rootPerson = new Person("root", "root", 0, "root@administrator.com");
 
     public HomeView() {
         initGrid();
+        initTreeGrid();
         addEntry = new Button("Add Entry");
         addEntry.addClickListener(event -> {
             List<Person> personList = new ArrayList<>(dataProvider.getItems());
             personList.add(new Person("Lost", "And Found", 123, "test@domain.com"));
             refreshGrid(personList);
         });
-        add(addEntry, defaultGrid);
+        add(addEntry, defaultGrid, personTreeGrid);
     }
 
     private void initGrid() {
@@ -54,7 +62,7 @@ public class HomeView extends HorizontalLayout {
         buildGrid();
         dataProvider = new ListDataProvider<>(people);
         defaultGrid.setDataProvider(dataProvider);
-        add(defaultGrid);
+        addComponentAtIndex(1, defaultGrid);
     }
 
     private void buildGrid() {
@@ -81,5 +89,56 @@ public class HomeView extends HorizontalLayout {
             remove.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_PRIMARY);
             return remove;
         });
+    }
+
+    private void initTreeGrid() {
+        buildTreeGrid();
+        List<Person> people = List.of(new Person("Jakob", "Danilo", 20, "danilo.jakob@gmx.ch"),
+                new Person("Mustermann", "Max", 30, "max.mustermann@gmail.com"),
+                new Person("Musterfrau", "Mia", 40, "mia.musterfrau@yahoo.com"),
+                new Person("Mustermann", "Maja", 50, "maja.mustermann@outlook.com"));
+        //personTreeGrid.setItems(people, this::getMorePeople);
+        TreeData<Person> treeData = new TreeData<>();
+        treeData.addRootItems(rootPerson);
+        treeData.addItems(rootPerson, people);
+        treeDataProvider = new TreeDataProvider<>(treeData);
+        personTreeGrid.setDataProvider(treeDataProvider);
+    }
+
+    private void buildTreeGrid() {
+        personTreeGrid = new TreeGrid<>();
+        personTreeGrid.addHierarchyColumn(Person::getSurName).setHeader("First Name");
+        personTreeGrid.addComponentColumn(person -> {
+            TextField textField = new TextField();
+            textField.setValue(person.getName());
+            textField.addValueChangeListener(event -> {
+                person.setName(event.getValue());
+                // Here you could also update the database, we just update the model
+            });
+            return textField;
+        });
+        personTreeGrid.addColumn(Person::getAge).setHeader("Age");
+        personTreeGrid.addColumn(Person::geteMail).setHeader("Email");
+        personTreeGrid.addComponentColumn(person -> {
+            Button remove = new Button("Remove");
+            remove.addClickListener(event -> {
+                List<Person> personList = new ArrayList<>(treeDataProvider.getTreeData().getChildren(rootPerson));
+                personList.remove(person);
+                refreshTreeGrid(personList);
+            });
+            return remove;
+        });
+    }
+
+    private void refreshTreeGrid(List<Person> people) {
+        remove(personTreeGrid);
+        buildTreeGrid();
+        TreeData<Person> treeData = new TreeData<>();
+        treeData.addRootItems(rootPerson);
+        treeData.addItems(rootPerson, people);
+        treeDataProvider = new TreeDataProvider<>(treeData);
+        personTreeGrid.setDataProvider(treeDataProvider);
+        personTreeGrid.expand(rootPerson);
+        addComponentAtIndex(2, personTreeGrid);
     }
 }
