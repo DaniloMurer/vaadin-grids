@@ -5,15 +5,15 @@ public class Person {
     private String name;
     private String surName;
     private int age;
-    private String eMail;
+    private String email;
     private String managerName;
     private boolean isManager;
 
-    public Person(String name, String surName, int age, String eMail, String managerName, boolean isManager) {
+    public Person(String name, String surName, int age, String email, String managerName, boolean isManager) {
         this.name = name;
         this.surName = surName;
         this.age = age;
-        this.eMail = eMail;
+        this.email = email;
         this.managerName = managerName;
         this.isManager = isManager;
     }
@@ -42,12 +42,12 @@ public class Person {
         this.age = age;
     }
 
-    public String geteMail() {
-        return eMail;
+    public String getEmail() {
+        return email;
     }
 
-    public void seteMail(String eMail) {
-        this.eMail = eMail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getManagerName() {

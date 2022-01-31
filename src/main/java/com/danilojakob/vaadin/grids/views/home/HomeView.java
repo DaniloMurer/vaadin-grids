@@ -1,6 +1,5 @@
 package com.danilojakob.vaadin.grids.views.home;
 
-import com.danilojakob.vaadin.grids.domain.Manager;
 import com.danilojakob.vaadin.grids.service.PersonService;
 import com.danilojakob.vaadin.grids.views.MainLayout;
 import com.danilojakob.vaadin.grids.domain.Person;
@@ -79,7 +78,7 @@ public class HomeView extends VerticalLayout {
         });
         defaultGrid.addColumn(Person::getName).setHeader("Last name");
         defaultGrid.addColumn(Person::getAge).setHeader("Age");
-        defaultGrid.addColumn(Person::geteMail).setHeader("Email");
+        defaultGrid.addColumn(Person::getEmail).setHeader("Email");
         defaultGrid.addComponentColumn(person -> {
             Button remove = new Button("Remove");
             remove.addClickListener(event -> {
@@ -116,7 +115,7 @@ public class HomeView extends VerticalLayout {
             return textField;
         });
         personTreeGrid.addColumn(Person::getAge).setHeader("Age");
-        personTreeGrid.addColumn(Person::geteMail).setHeader("Email");
+        personTreeGrid.addColumn(Person::getEmail).setHeader("Email");
         personTreeGrid.addComponentColumn(person -> {
             Button remove = new Button("Remove");
             remove.addClickListener(event -> {

@@ -1,9 +1,7 @@
 package com.danilojakob.vaadin.grids.service;
 
-import com.danilojakob.vaadin.grids.domain.Manager;
 import com.danilojakob.vaadin.grids.domain.Person;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
