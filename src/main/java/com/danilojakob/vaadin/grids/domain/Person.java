@@ -1,4 +1,4 @@
-package com.danilojakob.vaadin.grids.views.domain;
+package com.danilojakob.vaadin.grids.domain;
 
 public class Person {
 
@@ -6,12 +6,16 @@ public class Person {
     private String surName;
     private int age;
     private String eMail;
+    private String managerName;
+    private boolean isManager;
 
-    public Person(String name, String surName, int age, String eMail) {
+    public Person(String name, String surName, int age, String eMail, String managerName, boolean isManager) {
         this.name = name;
         this.surName = surName;
         this.age = age;
         this.eMail = eMail;
+        this.managerName = managerName;
+        this.isManager = isManager;
     }
 
     public String getName() {
@@ -44,5 +48,21 @@ public class Person {
 
     public void seteMail(String eMail) {
         this.eMail = eMail;
+    }
+
+    public String getManagerName() {
+        return managerName;
+    }
+
+    public void setManagerName(String managerName) {
+        this.managerName = managerName;
+    }
+
+    public boolean isManager() {
+        return isManager;
+    }
+
+    public void setIsManager(boolean manager) {
+        isManager = manager;
     }
 }
